@@ -11,7 +11,6 @@ class BukuController extends Controller
     {
         $bukuList = \App\Models\Buku::with('kategori')->get();
 
-        // Jika diakses via AJAX/API, kembalikan JSON
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json($bukuList);
         }

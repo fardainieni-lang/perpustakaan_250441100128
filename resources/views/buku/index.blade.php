@@ -11,7 +11,7 @@
                 
                 <div id="pesan" class="mb-4 font-bold text-left"></div>
 
-                @canany(['Kelola data buku', 'kelola data buku'])
+                @can('kelola-buku')
                 <div class="border border-gray-200 rounded-lg p-6 mb-8 bg-white shadow-sm text-left">
                     <h3 id="formTitle" class="font-bold text-lg text-gray-800 mb-4 text-left">Form Data Buku</h3>
                     
@@ -48,7 +48,7 @@
                         </div>
                     </form>
                 </div>
-                @endcanany
+                @endcan
 
                 <h3 class="font-bold text-lg text-gray-800 mb-3 text-left">Daftar Buku</h3>
                 
@@ -80,10 +80,11 @@
                                     <td class="p-3 border border-gray-200 text-left">
                                         <div class="flex items-center justify-start gap-2">
                                             <a href="/buku/{{ $buku->id }}" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded transition inline-block text-left" style="text-decoration: none;">Detail</a>
-                                            @canany(['Kelola data buku', 'kelola data buku'])
+                                            
+                                            @can('kelola-buku')
                                                 <button type="button" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded transition text-left" onclick="editBuku({{ $buku->id }}, {{ $buku->kategori_id ?? 1 }}, '{{ addslashes($buku->judul) }}', '{{ addslashes($buku->penulis) }}', '{{ $buku->tahun_terbit ?? '-' }}')">Ubah</button>
                                                 <button type="button" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded transition text-left" onclick="hapusBuku({{ $buku->id }})">Hapus</button>
-                                            @endcanany
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>
@@ -103,7 +104,7 @@
 <script>
         const API_URL = '/api/buku';
         const CSRF_TOKEN = @json(csrf_token());
-        const BISA_KELOLA = @json(auth()->check() && (auth()->user()->can('Kelola data buku') || auth()->user()->can('kelola data buku')));
+        const BISA_KELOLA = @json(auth()->check() && auth()->user()->can('kelola-buku'));
         async function ambilDataBuku() {
             try {
                 const response = await fetch(API_URL, {
@@ -170,7 +171,7 @@
                 listBuku.forEach(buku => {
                     const elJudul = document.getElementById(`judul-buku-${buku.id}`);
                     if (elJudul) {
-                        elJudul.textContent = buku.judul; // Ini otomatis mengubah tag <script> jadi teks biasa!
+                        elJudul.textContent = buku.judul; 
                     }
                 });
 
