@@ -76,7 +76,7 @@ class RolePermissionSeeder extends Seeder
         // Buat Akun & Assign Role
         $admin = User::firstOrCreate(['email' => 'admin@perpustakaan.com'], [
             'name' => 'Administrator',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('12345678'),
         ]);
         $admin->syncRoles([$roleAdmin]);
 

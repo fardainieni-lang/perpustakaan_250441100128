@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/buku', [BukuController::class, 'store'])->middleware('can:kelola-buku')->name('api.buku.store');
     Route::put('/api/buku/{id}', [BukuController::class, 'update'])->middleware('can:kelola-buku')->name('api.buku.update');
     Route::delete('/api/buku/{id}', [BukuController::class, 'destroy'])->middleware('can:kelola-buku')->name('api.buku.destroy');
-    
+
     // KHUSUS SISWA
     Route::middleware(['role:Siswa'])->group(function () {
         Route::get('/riwayat-saya', [PeminjamanController::class, 'riwayat'])->name('peminjaman.riwayat');
