@@ -24,16 +24,18 @@ Route::middleware(['auth'])->group(function () {
 
     // Buku 
     Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
+
     Route::get('/buku/create', function() {
         return view('buku.create'); 
     })->middleware('can:kelola-buku');
 
     Route::get('/buku/{id}', [BukuController::class, 'show'])->name('buku.show');
+
     Route::get('/api/buku', [BukuController::class, 'index'])->name('api.buku.index');
     Route::post('/api/buku', [BukuController::class, 'store'])->middleware('can:kelola-buku')->name('api.buku.store');
     Route::put('/api/buku/{id}', [BukuController::class, 'update'])->middleware('can:kelola-buku')->name('api.buku.update');
     Route::delete('/api/buku/{id}', [BukuController::class, 'destroy'])->middleware('can:kelola-buku')->name('api.buku.destroy');
-
+    
     // KHUSUS SISWA
     Route::middleware(['role:Siswa'])->group(function () {
         Route::get('/riwayat-saya', [PeminjamanController::class, 'riwayat'])->name('peminjaman.riwayat');

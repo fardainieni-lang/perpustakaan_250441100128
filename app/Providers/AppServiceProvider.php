@@ -5,7 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate; 
 use Illuminate\Support\Facades\View;
-
+use App\Models\Peminjaman;             
+use App\Policies\PeminjamanPolicy;  
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -21,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+    
+        Gate::policy(Peminjaman::class, PeminjamanPolicy::class);
 
         Gate::before(function ($user, $ability) {
             if ($user && method_exists($user, 'hasRole')) {

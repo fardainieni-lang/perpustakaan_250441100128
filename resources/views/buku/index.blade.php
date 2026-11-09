@@ -104,6 +104,7 @@
 <script>
         const API_URL = '/api/buku';
         const CSRF_TOKEN = @json(csrf_token());
+        const ADALAH_SISWA = @json(auth()->check() && (auth()->user()->hasRole('Siswa') || auth()->user()->hasRole('siswa')));
         const BISA_KELOLA = @json(auth()->check() && auth()->user()->can('kelola-buku'));
         async function ambilDataBuku() {
             try {
@@ -138,6 +139,16 @@
                         let tombolAksi = `
                             <a href="/buku/${buku.id}" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded transition inline-block text-left" style="text-decoration: none;">Detail</a>
                         `;
+
+                        if (ADALAH_SISWA) {
+                            tombolAksi += `
+                                <form action="{{ route('peminjaman.store') }}" method="POST" class="inline-block m-0">
+                                    <input type="hidden" name="_token" value="${CSRF_TOKEN}">
+                                    <input type="hidden" name="buku_id" value="${buku.id}">
+                                    <button type="submit" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded transition text-left">Pinjam</button>
+                                </form>
+                            `;
+                        }
 
                         if (BISA_KELOLA) {
                             tombolAksi += `
@@ -279,5 +290,7 @@
                 el.innerHTML = pesan;
             }
         }
+
+         ambilDataBuku();
     </script>
 </x-app-layout>
