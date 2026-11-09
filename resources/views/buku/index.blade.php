@@ -73,7 +73,7 @@
                                         {{ $buku->kategori->nama_kategori ?? $buku->kategori->nama ?? 'Umum' }}
                                     </td>
                                     <td class="p-3 border border-gray-200 font-medium text-left" id="judul-buku-{{ $buku->id }}">
-                                        {!! $buku->judul !!}
+                                       {{$buku->judul}}
                                     </td>
                                     <td class="p-3 border border-gray-200 text-left">{{ $buku->penulis }}</td>
                                     <td class="p-3 border border-gray-200 text-left">{{ $buku->tahun_terbit ?? $buku->tahun ?? '-' }}</td>
@@ -104,7 +104,7 @@
         const API_URL = '/api/buku';
         const CSRF_TOKEN = @json(csrf_token());
         const BISA_KELOLA = @json(auth()->check() && (auth()->user()->can('Kelola data buku') || auth()->user()->can('kelola data buku')));
-
+        async function ambilDataBuku() {
             try {
                 const response = await fetch(API_URL, {
                     headers: { 
@@ -141,16 +141,18 @@
                         if (BISA_KELOLA) {
                             tombolAksi += `
                                 <button type="button" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded transition text-left" onclick="editBuku(${buku.id}, ${katId}, '${judulClean}', '${penulisClean}', '${tahun}')">Ubah</button>
-                                <button type="button" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded transition text-left" onclick="hapusBuku(${buku.id})">Hapus</button>
+                                <form action="{{ url('/buku/' . $buku->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?');" style="display:inline;">
+                                    <input type="hidden" name="_token" value="${CSRF_TOKEN}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="button" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded transition text-left" onclick="hapusBuku(${buku.id})">Hapus</button>
+                                </form>
                             `;
                         }
 
                         rows += `
                             <tr class="border-b border-gray-200 hover:bg-gray-50 text-left">
                                 <td class="p-3 border border-gray-200 text-left">${namaKategori}</td>
-                                <td class="p-3 border border-gray-200 font-medium text-left" id="judul-buku-${buku.id}">
-                                    ${buku.judul}
-                                </td>
+                                <td class="p-3 border border-gray-200 font-medium text-left" id="judul-buku-${buku.id}"></td>
                                 <td class="p-3 border border-gray-200 text-left">${buku.penulis}</td>
                                 <td class="p-3 border border-gray-200 text-left">${tahun}</td>
                                 <td class="p-3 border border-gray-200 text-left">
@@ -165,22 +167,17 @@
 
                 document.getElementById('tabelBuku').innerHTML = rows;
 
-                
                 listBuku.forEach(buku => {
                     const elJudul = document.getElementById(`judul-buku-${buku.id}`);
-                    if (elJudul && buku.judul && buku.judul.includes('<script>')) {
-                        elJudul.innerHTML = '';
-                        const range = document.createRange();
-                        range.selectNode(elJudul);
-                        const fragment = range.createContextualFragment(buku.judul);
-                        elJudul.appendChild(fragment);
+                    if (elJudul) {
+                        elJudul.textContent = buku.judul; // Ini otomatis mengubah tag <script> jadi teks biasa!
                     }
                 });
 
             } catch (error) {
                 tampilkanPesan(error.message, 'red');
             }
-        
+        }
 
         const formBuku = document.getElementById('formBuku');
         if (formBuku) {

@@ -52,7 +52,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/buku-cari', [BukuController::class, 'cariBuku'])->middleware('auth');
 
-    Route::get('/buku/{id}/hapus-get', [BukuController::class, 'destroyGet'])->middleware('auth');
+    Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->middleware('auth');
 
     Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show'])->middleware('auth');
 });
