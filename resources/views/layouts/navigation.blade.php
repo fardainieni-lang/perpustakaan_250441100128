@@ -95,11 +95,11 @@
                 {{ __('Daftar Buku') }}
             </x-responsive-nav-link>
 
-            @if(auth()->user()->hasRole(['Siswa', 'siswa']) || auth()->user()->can('Melihat riwayat peminjaman sendiri') || auth()->user()->can('lihat riwayat peminjaman sendiri') || !auth()->user()->hasRole(['Admin', 'admin', 'Petugas', 'petugas']))
+           @hasrole('Siswa')
                 <x-responsive-nav-link :href="route('peminjaman.riwayat')" :active="request()->routeIs('peminjaman.riwayat')" style="color: #ffffff;">
                     {{ __('Riwayat Saya') }}
                 </x-responsive-nav-link>
-            @endif
+            @endhasrole
 
             @if(auth()->user()->hasRole(['Admin', 'admin', 'Petugas', 'petugas']) || auth()->user()->can('Kelola peminjaman') || auth()->user()->can('kelola peminjaman'))
                 <x-responsive-nav-link :href="route('peminjaman.index')" :active="request()->routeIs('peminjaman.index')" style="color: #ffffff;">

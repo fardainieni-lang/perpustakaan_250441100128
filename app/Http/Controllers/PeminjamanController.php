@@ -14,9 +14,18 @@ class PeminjamanController extends Controller
             'buku_id' => 'required|exists:bukus,id',
         ]);
 
-        
+        $user = auth()->user();
+        \App\Models\Anggota::updateOrCreate(
+            ['email' => $user->email],
+            [
+                'id'         => $user->id, 
+                'nama'       => $user->name,
+                'email'      => $user->email,
+                'no_telepon' => '08123456789'
+            ]
+        );
         Peminjaman::create([
-            'anggota_id'      => auth()->id(), 
+            'anggota_id'      => $user->id, 
             'buku_id'         => $request->buku_id,
             'tanggal_pinjam'  => now()->toDateString(),
             'tanggal_kembali' => null,
@@ -32,11 +41,9 @@ class PeminjamanController extends Controller
     }
 
    
-    public function riwayat()
+   public function riwayat()
     {
         $user = auth()->user();
-        
-        
         $peminjamans = Peminjaman::with('buku')
             ->where('anggota_id', $user->id)
             ->latest()

@@ -20,8 +20,14 @@
 
             {{-- Rekap Tabel --}}
             <div class="bg-white overflow-hidden shadow-md rounded-lg p-8 border border-gray-200">
-                <div class="text-center mb-8 pb-4 border-b border-gray-200">
+                
+                {{-- Header Rekapitulasi & Tombol Cetak Laporan di Samping Judul --}}
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-8 pb-4 border-b border-gray-200 gap-4">
                     <h2 class="text-2xl font-bold text-gray-800">Rekapitulasi Transaksi Perpustakaan</h2>
+                    
+                   <button onclick="window.print()" class="px-4 py-2 rounded text-white font-bold shadow transition" style="background-color: #0284c7;">
+                        Cetak Laporan
+                   </button>
                 </div>
 
                 <div class="overflow-x-auto">

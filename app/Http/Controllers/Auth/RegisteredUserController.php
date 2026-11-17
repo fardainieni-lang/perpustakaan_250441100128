@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Anggota; // <-- 1. Tambahkan import model Anggota di sini
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,6 +42,11 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        Anggota::create([
+            'nama'       => $user->name,
+            'email'      => $user->email,
+            'no_telepon' => '08123456789', 
+        ]);
         
         if (class_exists('\Spatie\Permission\Models\Role')) {
             $user->assignRole('Siswa');

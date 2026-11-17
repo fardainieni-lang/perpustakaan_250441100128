@@ -26,7 +26,7 @@ class BukuController extends Controller
             'judul'        => $bukuModel->judul,
             'penulis'      => $bukuModel->penulis,
             'tahun_terbit' => $bukuModel->tahun_terbit,
-            'kategori'     => $bukuModel->kategori->nama ?? '-', // Mengambil nama kategorinya
+            'kategori'     => $bukuModel->kategori->nama ?? '-', 
             'gambar'       => $bukuModel->gambar,
         ];
 
@@ -36,17 +36,24 @@ class BukuController extends Controller
     public function store(\Illuminate\Http\Request $request)
     {
         $request->validate([
-            'judul'        => 'required',
-            'penulis'      => 'required',
-            'tahun_terbit' => 'nullable',
-            'kategori_id'  => 'nullable',
+            'kategori_id'  => 'required|exists:kategoris,id',
+            'judul'        => 'required|string|min:3|max:150',
+            'penulis'      => 'required|string|min:3|max:100',
+            'tahun_terbit' => 'required|integer|min:1900|max:' . date('Y'),
+        ], [
+            'judul.min'        => 'Judul buku minimal harus 3 karakter.',
+            'judul.max'        => 'Judul buku maksimal 150 karakter.',
+            'penulis.min'      => 'Nama penulis minimal harus 3 karakter.',
+            'penulis.max'      => 'Nama penulis maksimal 100 karakter.',
+            'tahun_terbit.min' => 'Tahun terbit minimal adalah 1900.',
+            'tahun_terbit.max' => 'Tahun terbit tidak boleh melebihi tahun saat ini.',
         ]);
 
         $buku = \App\Models\Buku::create([
             'judul'        => $request->judul,
             'penulis'      => $request->penulis,
-            'tahun_terbit' => $request->tahun_terbit ?? 2024,
-            'kategori_id'  => $request->kategori_id ?? 1,
+            'tahun_terbit' => $request->tahun_terbit,
+            'kategori_id'  => $request->kategori_id,
         ]);
 
         return response()->json(['message' => 'Buku berhasil ditambahkan!', 'data' => $buku], 200);
@@ -55,23 +62,30 @@ class BukuController extends Controller
     public function update(\Illuminate\Http\Request $request, $id)
     {
         $request->validate([
-            'judul'        => 'required',
-            'penulis'      => 'required',
-            'tahun_terbit' => 'nullable',
-            'kategori_id'  => 'nullable',
+            'kategori_id'  => 'required|exists:kategoris,id',
+            'judul'        => 'required|string|min:3|max:150',
+            'penulis'      => 'required|string|min:3|max:100',
+            'tahun_terbit' => 'required|integer|min:1900|max:' . date('Y'),
+        ], [
+            'judul.min'        => 'Judul buku minimal harus 3 karakter.',
+            'judul.max'        => 'Judul buku maksimal 150 karakter.',
+            'penulis.min'      => 'Nama penulis minimal harus 3 karakter.',
+            'penulis.max'      => 'Nama penulis maksimal 100 karakter.',
+            'tahun_terbit.min' => 'Tahun terbit minimal adalah 1900.',
+            'tahun_terbit.max' => 'Tahun terbit tidak boleh melebihi tahun saat ini.',
         ]);
 
         $buku = \App\Models\Buku::findOrFail($id);
         $buku->update([
             'judul'        => $request->judul,
             'penulis'      => $request->penulis,
-            'tahun_terbit' => $request->tahun_terbit ?? 2024,
-            'kategori_id'  => $request->kategori_id ?? 1,
+            'tahun_terbit' => $request->tahun_terbit,
+            'kategori_id'  => $request->kategori_id,
         ]);
 
         return response()->json(['message' => 'Buku berhasil diperbarui!', 'data' => $buku], 200);
     }
-
+    
     public function destroy($id)
     {
         $buku = \App\Models\Buku::findOrFail($id);

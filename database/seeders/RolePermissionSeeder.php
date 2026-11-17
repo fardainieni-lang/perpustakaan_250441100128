@@ -74,22 +74,34 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         // Buat Akun & Assign Role
-        $admin = User::firstOrCreate(['email' => 'admin@perpustakaan.com'], [
+        $admin = User::updateOrCreate(['email' => 'admin@perpustakaan.com'], [
             'name' => 'Administrator',
             'password' => Hash::make('12345678'),
         ]);
         $admin->syncRoles([$roleAdmin]);
 
-        $petugas = User::firstOrCreate(['email' => 'petugas@perpustakaan.com'], [
+        $petugas = User::updateOrCreate(['email' => 'petugas@perpustakaan.com'], [
             'name' => 'Petugas Perpustakaan',
             'password' => Hash::make('password123'),
         ]);
         $petugas->syncRoles([$rolePetugas]);
 
-        $siswa = User::firstOrCreate(['email' => 'siswa@perpustakaan.com'], [
+        $siswa = User::updateOrCreate(['email' => 'siswa@perpustakaan.com'], [
             'name' => 'Siswa Utama',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('12345678'), 
         ]);
         $siswa->syncRoles([$roleSiswa]);
+
+        foreach (User::all() as $user) {
+            \App\Models\Anggota::updateOrCreate(
+                ['email' => $user->email],
+                [
+                    'id'         => $user->id,
+                    'nama'       => $user->name,
+                    'email'      => $user->email,
+                    'no_telepon' => '08123456789'
+                ]
+            );
+        }
     }
 }
