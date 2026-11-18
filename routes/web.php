@@ -28,9 +28,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/buku/create', function() {
         return view('buku.create'); 
     })->middleware('can:kelola-buku');
-
+    Route::post('/buku', [BukuController::class, 'store'])->middleware('can:kelola-buku')->name('buku.store');
     Route::get('/buku/{id}', [BukuController::class, 'show'])->name('buku.show');
-
+    Route::get('/buku/{id}', [BukuController::class, 'show'])->name('buku.show');
+    
     Route::get('/api/buku', [BukuController::class, 'index'])->name('api.buku.index');
     Route::post('/api/buku', [BukuController::class, 'store'])->middleware('can:kelola-buku')->name('api.buku.store');
     Route::put('/api/buku/{id}', [BukuController::class, 'update'])->middleware('can:kelola-buku')->name('api.buku.update');
