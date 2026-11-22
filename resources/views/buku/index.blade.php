@@ -19,8 +19,13 @@
                         <input type="hidden" id="bukuId">
 
                         <div class="text-left">
-                            <label class="block font-semibold text-gray-700 mb-1 text-left">Kategori ID:</label>
-                            <input type="number" id="kategori_id" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border text-left" required>
+                            <label for="kategori_id" class="block font-semibold text-gray-700 mb-1 text-left">Kategori:</label>
+                            <select id="kategori_id" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border text-left bg-white" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                @foreach(\App\Models\Kategori::orderBy('nama_kategori')->get() as $kategori)
+                                    <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori ?? $kategori->nama }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="text-left">
